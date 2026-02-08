@@ -19,7 +19,7 @@ public class GrepNavigator {
 
         // your required format:
         @Override public String toString() {
-            return lineNo + "," + colOffset + "," + lineText;
+            return lineNo + "," + colOffset + "," + absOffset + "," + lineText;
         }
     }
 
