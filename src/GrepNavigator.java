@@ -162,7 +162,7 @@ public class GrepNavigator {
         // no error here
         // another ERROR happened
 
-        GrepNavigator nav = new GrepNavigator("D:\\workspace\\java\\demo\\src\\main\\java\\org\\example\\test.log", "ERROR");
+        GrepNavigator nav = new GrepNavigator("/home/qiumc/test.log", "ERROR");
 
         nav.setWrap(true);
         nav.setCursor(0);
