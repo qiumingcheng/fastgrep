@@ -60,6 +60,21 @@ public class GrepNavigatorTest {
         assertNull("missing next", nav2.next());
         assertNull("missing prev", nav2.prev());
 
+        Path empty = Files.createTempFile("grepnav-empty", ".log");
+        GrepNavigator nav3 = new GrepNavigator(empty.toString(), "ERROR");
+        nav3.setWrap(true);
+        nav3.setCursor(0);
+        assertNull("empty next", nav3.next());
+        assertNull("empty prev", nav3.prev());
+
+        Path single = Files.createTempFile("grepnav-single", ".log");
+        Files.writeString(single, "ERROR only line");
+        GrepNavigator nav4 = new GrepNavigator(single.toString(), "ERROR");
+        nav4.setWrap(true);
+        nav4.setCursor(0);
+        assertEquals("single next", "1,0,ERROR only line", nav4.next().toString());
+        assertEquals("single prev wrap", "1,0,ERROR only line", nav4.prev().toString());
+
         System.out.println("OK");
     }
 }
