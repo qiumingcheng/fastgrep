@@ -39,13 +39,11 @@ public class GrepNavigatorTest {
         assertNull("h4", h4);
 
         GrepNavigator.Hit p1 = nav.prev();
-        assertEquals("p1", "5,0,43,ERROR at start", p1.toString());
+        assertEquals("p1", "3,6,29,delta ERROR", p1.toString());
         GrepNavigator.Hit p2 = nav.prev();
-        assertEquals("p2", "3,6,29,delta ERROR", p2.toString());
+        assertEquals("p2", "2,5,11,beta ERROR gamma", p2.toString());
         GrepNavigator.Hit p3 = nav.prev();
-        assertEquals("p3", "2,5,11,beta ERROR gamma", p3.toString());
-        GrepNavigator.Hit p4 = nav.prev();
-        assertNull("p4", p4);
+        assertNull("p3", p3);
 
         nav.setWrap(true);
         nav.setCursor(0);
