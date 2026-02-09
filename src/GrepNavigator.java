@@ -36,7 +36,15 @@ public class GrepNavigator {
 
     public void setWrap(boolean wrap) { this.wrap = wrap; }
     public void setReverse(boolean reverse) { this.reverse = reverse; }
-    public void setCursor(long cursor) { this.cursor = Math.max(0, cursor); }
+    public void setCursor(long lineNo, long colOffset) throws IOException {
+        if (lineNo < 1) {
+            throw new IllegalArgumentException("lineNo must be >= 1");
+        }
+        if (colOffset < 0) {
+            throw new IllegalArgumentException("colOffset must be >= 0");
+        }
+        this.cursor = Math.max(0, findAbsOffset(lineNo, colOffset));
+    }
     public long getCursor() { return cursor; }
 
     public Hit next() throws IOException, InterruptedException {
@@ -96,6 +104,31 @@ public class GrepNavigator {
         String text = resultLine.substring(secondComma + 1);
 
         return new Hit(abs, lineNo, col, text);
+    }
+
+    private long findAbsOffset(long lineNo, long colOffset) throws IOException {
+        long targetLine = lineNo;
+        long pos = 0;
+        long current = 0;
+        boolean sawLine = false;
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sawLine = true;
+                current++;
+                if (current == targetLine) {
+                    if (colOffset > line.length()) {
+                        throw new IllegalArgumentException("colOffset exceeds line length");
+                    }
+                    return pos + colOffset;
+                }
+                pos += line.length() + 1;
+            }
+        }
+        if (!sawLine && lineNo == 1 && colOffset == 0) {
+            return 0;
+        }
+        throw new IllegalArgumentException("lineNo exceeds total lines");
     }
 
     private static String buildShell(String mode, String filePath, String pattern, long cursor, boolean wrap) {
@@ -167,7 +200,7 @@ public class GrepNavigator {
         GrepNavigator nav = new GrepNavigator("/home/qiumc/test.log", "ERROR");
 
         nav.setWrap(true);
-        nav.setCursor(0);
+        nav.setCursor(1, 0);
 
         Hit h1 = nav.next();
         System.out.println(h1); // 期望：1,10,this is an ERROR line

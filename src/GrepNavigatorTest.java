@@ -27,7 +27,7 @@ public class GrepNavigatorTest {
 
         GrepNavigator nav = new GrepNavigator(temp.toString(), "ERROR");
         nav.setWrap(false);
-        nav.setCursor(0);
+        nav.setCursor(1, 0);
 
         GrepNavigator.Hit h1 = nav.next();
         assertEquals("h1", "2,5,11,beta ERROR gamma", h1.toString());
@@ -46,7 +46,7 @@ public class GrepNavigatorTest {
         assertNull("p3", p3);
 
         nav.setWrap(true);
-        nav.setCursor(0);
+        nav.setCursor(1, 0);
         GrepNavigator.Hit w1 = nav.prev();
         assertEquals("w1", "5,0,43,ERROR at start", w1.toString());
         GrepNavigator.Hit w2 = nav.next();
@@ -54,14 +54,14 @@ public class GrepNavigatorTest {
 
         GrepNavigator nav2 = new GrepNavigator(temp.toString(), "MISSING");
         nav2.setWrap(true);
-        nav2.setCursor(0);
+        nav2.setCursor(1, 0);
         assertNull("missing next", nav2.next());
         assertNull("missing prev", nav2.prev());
 
         Path empty = Files.createTempFile("grepnav-empty", ".log");
         GrepNavigator nav3 = new GrepNavigator(empty.toString(), "ERROR");
         nav3.setWrap(true);
-        nav3.setCursor(0);
+        nav3.setCursor(1, 0);
         assertNull("empty next", nav3.next());
         assertNull("empty prev", nav3.prev());
 
@@ -69,7 +69,7 @@ public class GrepNavigatorTest {
         Files.writeString(single, "ERROR only line");
         GrepNavigator nav4 = new GrepNavigator(single.toString(), "ERROR");
         nav4.setWrap(true);
-        nav4.setCursor(0);
+        nav4.setCursor(1, 0);
         assertEquals("single next", "1,0,0,ERROR only line", nav4.next().toString());
         assertEquals("single prev wrap", "1,0,0,ERROR only line", nav4.prev().toString());
 
